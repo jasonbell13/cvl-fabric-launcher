@@ -607,7 +607,7 @@ def getCQUGPUConfig(queue):
     c.agent=siteConfig.cmdRegEx()
     c.tunnel=siteConfig.cmdRegEx('{sshBinary} -A -c {cipher} -t -t -oStrictHostKeyChecking=no -L {localPortNumber}:{execHost}:{remotePortNumber} -l {username} {loginHost} "echo tunnel_hello; bash"','tunnel_hello',async=True)
     c.otp= siteConfig.cmdRegEx('\'cat ~/.vnc/clearpass\'','^(?P<vncPasswd>\S+)$')
-    cmd='\" /apps/samples/sys-files/startup-checker.sh ; rm -f ~/.vnc/clearpass ; touch ~/.vnc/clearpass ; chmod 600 ~/.vnc/clearpass ; passwd=\"\'$\'\"( dd if=/dev/urandom bs=1 count=8 2>/dev/null | md5sum | cut -b 1-8 ) ; echo \"\'$\'\"passwd > ~/.vnc/clearpass ; cat ~/.vnc/clearpass | vncpasswd -f > ~/.vnc/passwd ; chmod 600 ~/.vnc/passwd ;  echo \\\" /apps/samples/sys-files/remove-old-vnc-pids.sh ; vncserver -geometry {resolution} ; sleep 10000000000\\\" | qsub  -l ncpus={ppn},mem={mem}g,ngpus=1 -N INTERACT  -o .vnc/ -e .vnc/ \"'
+    cmd='\" /apps/samples/sys-files/startup-checker.sh ; rm -f ~/.vnc/clearpass ; touch ~/.vnc/clearpass ; chmod 600 ~/.vnc/clearpass ; passwd=\"\'$\'\"( dd if=/dev/urandom bs=1 count=8 2>/dev/null | md5sum | cut -b 1-8 ) ; echo \"\'$\'\"passwd > ~/.vnc/clearpass ; cat ~/.vnc/clearpass | vncpasswd -f > ~/.vnc/passwd ; chmod 600 ~/.vnc/passwd ;  echo \\\" /apps/samples/sys-files/remove-old-vnc-pids.sh ; /apps/samples/sys-files/vnc-log-delete.sh ; vncserver -geometry {resolution} ; sleep 10000000000\\\" | qsub  -l ncpus={ppn},mem={mem}g,ngpus=1 -N INTERACT  -o .vnc/ -e .vnc/ \"'
     regex="^(?P<jobid>(?P<jobidNumber>[0-9]+)\.\S+)\s*$"
     c.startServer=siteConfig.cmdRegEx(cmd,regex)
     c.vncDisplay=siteConfig.cmdRegEx('\'cat ~/.vnc/{execHost}*.log\'','port 59(?P<vncDisplay>[0-9]+)')
@@ -645,7 +645,7 @@ def getCQUStandardVNCConfig(queue):
     c.agent=siteConfig.cmdRegEx()
     c.tunnel=siteConfig.cmdRegEx('{sshBinary} -A -c {cipher} -t -t -oStrictHostKeyChecking=no -L {localPortNumber}:{execHost}:{remotePortNumber} -l {username} {loginHost} "echo tunnel_hello; bash"','tunnel_hello',async=True)
     c.otp= siteConfig.cmdRegEx('\'cat ~/.vnc/clearpass\'','^(?P<vncPasswd>\S+)$')
-    cmd='\" /apps/samples/sys-files/startup-checker.sh ; rm -f ~/.vnc/clearpass ; touch ~/.vnc/clearpass ; chmod 600 ~/.vnc/clearpass ; passwd=\"\'$\'\"( dd if=/dev/urandom bs=1 count=8 2>/dev/null | md5sum | cut -b 1-8 ) ; echo \"\'$\'\"passwd > ~/.vnc/clearpass ; cat ~/.vnc/clearpass | vncpasswd -f > ~/.vnc/passwd ; chmod 600 ~/.vnc/passwd ;  echo \\\" /apps/samples/sys-files/remove-old-vnc-pids.sh ; vncserver -geometry {resolution} ; sleep 10000000000\\\" | qsub  -l ncpus={ppn},mem={mem}g -N STANDARD  -o .vnc/ -e .vnc/ \"'
+    cmd='\" /apps/samples/sys-files/startup-checker.sh ; rm -f ~/.vnc/clearpass ; touch ~/.vnc/clearpass ; chmod 600 ~/.vnc/clearpass ; passwd=\"\'$\'\"( dd if=/dev/urandom bs=1 count=8 2>/dev/null | md5sum | cut -b 1-8 ) ; echo \"\'$\'\"passwd > ~/.vnc/clearpass ; cat ~/.vnc/clearpass | vncpasswd -f > ~/.vnc/passwd ; chmod 600 ~/.vnc/passwd ;  echo \\\" /apps/samples/sys-files/remove-old-vnc-pids.sh ; /apps/samples/sys-files/vnc-log-delete.sh ; vncserver -geometry {resolution} ; sleep 10000000000\\\" | qsub  -l ncpus={ppn},mem={mem}g -N STANDARD  -o .vnc/ -e .vnc/ \"'
     regex="^(?P<jobid>(?P<jobidNumber>[0-9]+)\.\S+)\s*$"
     c.startServer=siteConfig.cmdRegEx(cmd,regex)
     c.vncDisplay=siteConfig.cmdRegEx('\'cat ~/.vnc/{execHost}*.log\'','port 59(?P<vncDisplay>[0-9]+)')
